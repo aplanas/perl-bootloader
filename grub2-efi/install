@@ -102,7 +102,7 @@ fi
 no_nvram_opts="--no-nvram --removable"
 has_nvram=0
 append=
-if [ ! -d /sys/firmware/efi/efivars -o ! -w /sys/firmware/efi/efivars -o ! "$(ls -A /sys/firmware/efi/efivars)" ] ; then
+if [ ! -d /sys/firmware/efi/efivars -o ! -w /sys/firmware/efi/efivars -o ! "$(ls -A /sys/firmware/efi/efivars 2>/dev/null)" ] ; then
   append="$no_nvram_opts"
   # no need to *additionally* update default location
   update_default=0

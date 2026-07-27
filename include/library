@@ -112,6 +112,8 @@ lib_get_cmdline_bls ()
 #
 lib_set_cmdline_bls ()
 {
+  [ ! -d /etc/kernel ] && mkdir /etc/kernel
+
   echo "$cmdline" > /etc/kernel/cmdline || {
     echo "/etc/kernel/cmdline: failed to update default kernel command"
     exit 1
