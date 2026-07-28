@@ -62,7 +62,7 @@ opt_refs=
 opt_test=
 opt_test_bash=1
 opt_test_busybox=1
-opt_test_ksh=0
+opt_test_ksh=1
 opt_test_dash=0
 [ "$with_dash" = 1 ] && opt_test_dash=1
 
@@ -93,7 +93,16 @@ init_tests ()
 
   touch "$test_root/var/log/pbl.log"
 
-  for p in $programs $busybox_programs ; do
+  for p in $programs ; do
+    p_alts=$(alts -t ${p##*/})
+    [ -z "$p_alts" ] && p_alts=$p
+    cp --parents "$p_alts" $(ldd "$p_alts" | sed -e '/\//! d; s/^.*[ \t]\(\/[^ ]\+\) .*$/\1/') "$test_root"
+    if [ "$p_alts" != "$p" ] ; then
+      mv "$test_root$p_alts" "$test_root$p"
+    fi
+  done
+
+  for p in $busybox_programs ; do
     cp --parents "$p" $(ldd "$p" | sed -e '/\//! d; s/^.*[ \t]\(\/[^ ]\+\) .*$/\1/') "$test_root"
   done
 
