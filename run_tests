@@ -50,7 +50,7 @@ dummy_programs="\
 # - 'date "+%F %T"' returns the fixed date "2023-11-01 23:59:58"
 # - 'df --local --sync --output=source /foo' returns $TEST_DF_foo
 # - 'efibootmgr' returns sample output.
-# - 'fdisk -l -o 'Device,Type' /dev/sda returns a sample lsiting; other fdisk calls return an error
+# - 'fdisk -l -o 'Device,Type' /dev/sda returns a sample listing; other fdisk calls return an error
 # - 'uname -m' returns $TEST_ARCH
 #
 # programs listed in dummy_programs are replaced by wrapper scripts that
@@ -59,10 +59,21 @@ dummy_programs="\
 # For example, grub2-install exits with $TEST_GRUB2_INSTALL_EXIT.
 
 opt_refs=
+opt_test=
+opt_test_bash=1
+opt_test_busybox=1
+opt_test_ksh=1
+opt_test_dash=0
+[ "$with_dash" = 1 ] && opt_test_dash=1
 
 while true ; do
   case $1 in
     -r|--make-reference) opt_refs=".ref" ; shift ; continue ;;
+    -t|--test) opt_test=$2 ; shift ; shift ; continue ;;
+    --bash) opt_test_bash=1 opt_test_busybox=0 opt_test_ksh=0 opt_test_dash=0 ; shift ; continue ;;
+    --busybox) opt_test_bash=0 opt_test_busybox=1 opt_test_ksh=0 opt_test_dash=0 ; shift ; continue ;;
+    --ksh) opt_test_bash=0 opt_test_busybox=0 opt_test_ksh=1 opt_test_dash=0 ; shift ; continue ;;
+    --dash) opt_test_bash=0 opt_test_busybox=0 opt_test_ksh=0 opt_test_dash=1 ; shift ; continue ;;
   esac
 
   break
@@ -72,7 +83,7 @@ init_tests ()
 {
   rm -rf "$test_root"
 
-  mkdir -p "$test_root"/{tmp,boot/grub2,etc/sysconfig,dev,var/log,usr/bin/system,usr/lib/bootloader,usr/lib64,usr/sbin}
+  mkdir -p "$test_root"/{tmp,boot/grub2,etc/sysconfig,dev,proc,var/log,usr/bin/system,usr/lib/bootloader,usr/lib64,usr/sbin}
 
   for i in bin sbin lib lib64 ; do
     ln -s "usr/$i" "$test_root"
@@ -82,7 +93,16 @@ init_tests ()
 
   touch "$test_root/var/log/pbl.log"
 
-  for p in $programs $busybox_programs ; do
+  for p in $programs ; do
+    p_alts=$(alts -t ${p##*/})
+    [ -z "$p_alts" ] && p_alts=$p
+    cp --parents "$p_alts" $(ldd "$p_alts" | sed -e '/\//! d; s/^.*[ \t]\(\/[^ ]\+\) .*$/\1/') "$test_root"
+    if [ "$p_alts" != "$p" ] ; then
+      mv "$test_root$p_alts" "$test_root$p"
+    fi
+  done
+
+  for p in $busybox_programs ; do
     cp --parents "$p" $(ldd "$p" | sed -e '/\//! d; s/^.*[ \t]\(\/[^ ]\+\) .*$/\1/') "$test_root"
   done
 
@@ -224,6 +244,11 @@ EOF
 
 do_tests ()
 {
+  if [ -n "$opt_test" ] ; then
+    do_test "$opt_test"
+    return
+  fi
+
   for t in "$test_dir"/[0-9]???_* ; do
     do_test "${t##*/}"
   done
@@ -237,6 +262,7 @@ show_results ()
 
   for t in "$test_dir"/[0-9]???_* ; do
     n=${t##*/}
+    [ -n "$opt_test" -a "$n" != "$opt_test" ] && continue
     printf "%-48s" "  $n"
     first=
     for i in "$t"/*."$shell".ref ; do
@@ -262,33 +288,45 @@ init_tests
 test_error=0
 
 if [ -n "$opt_refs" ] ; then
-  set_bash
-  do_tests
+  if [ "$opt_test_bash" = 1 ] ; then
+    set_bash
+    do_tests
+  fi
 
-  set_ksh
-  do_tests
+  if [ "$opt_test_ksh" = 1 ] ; then
+    set_ksh
+    do_tests
+  fi
 
-  set_busybox
-  do_tests
+  if [ "$opt_test_busybox" = 1 ] ; then
+    set_busybox
+    do_tests
+  fi
 
-  if [ "$with_dash" = 1 ] ; then
+  if [ "$opt_test_dash" = 1 ] ; then
     set_dash
     do_tests
   fi
 else
-  set_bash
-  do_tests
-  show_results
+  if [ "$opt_test_bash" = 1 ] ; then
+    set_bash
+    do_tests
+    show_results
+  fi
 
-  set_ksh
-  do_tests
-  show_results
+  if [ "$opt_test_ksh" = 1 ] ; then
+    set_ksh
+    do_tests
+    show_results
+  fi
 
-  set_busybox
-  do_tests
-  show_results
+  if [ "$opt_test_busybox" = 1 ] ; then
+    set_busybox
+    do_tests
+    show_results
+  fi
 
-  if [ "$with_dash" = 1 ] ; then
+  if [ "$opt_test_dash" = 1 ] ; then
     set_dash
     do_tests
     show_results

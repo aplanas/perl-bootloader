@@ -7,4 +7,6 @@ run pbl --add-option quiet=99
 run pbl --add-option mitigations=0
 run pbl --add-option foobar1=
 run pbl --add-option foobar2
+run pbl --add-option 'cio_ignore=all,!0800-0802,!6000-600b,!fa00'
+run pbl --add-option 'cio_ignore=all,!0800-0802,!6000-600b,!fa00'
 run pbl --default-settings
