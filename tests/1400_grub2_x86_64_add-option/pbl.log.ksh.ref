@@ -30,10 +30,22 @@ cmdline (old): mitigations=0 quiet=99 foo="bar  zap" nosimplefb=1 foobar1=
 cmdline (new): mitigations=0 quiet=99 foo="bar  zap" nosimplefb=1 foobar1= foobar2
 <<<<<<<<<<<<<<<<
 2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2/add-option cio_ignore=all,!0800-0802,!6000-600b,!fa00' = 0, output:
+>>>>>>>>>>>>>>>>
+cmdline (old): mitigations=0 quiet=99 foo="bar  zap" nosimplefb=1 foobar1= foobar2
+cmdline (new): mitigations=0 quiet=99 foo="bar  zap" nosimplefb=1 foobar1= foobar2 cio_ignore=all,!0800-0802,!6000-600b,!fa00
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2/add-option cio_ignore=all,!0800-0802,!6000-600b,!fa00' = 0, output:
+>>>>>>>>>>>>>>>>
+cmdline (old): mitigations=0 quiet=99 foo="bar  zap" nosimplefb=1 foobar1= foobar2 cio_ignore=all,!0800-0802,!6000-600b,!fa00
+cmdline (new): mitigations=0 quiet=99 foo="bar  zap" nosimplefb=1 foobar1= foobar2 cio_ignore=all,!0800-0802,!6000-600b,!fa00
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2
 2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2/default-settings' = 0, output:
 2023-11-01 23:59:58 <1> pbl-0: result:
 >>>>>>>>>>>>>>>>
 kernel=/boot/vmlinuz
 initrd=/boot/initrd
-append="mitigations=0 quiet=99 foo=\"bar  zap\" nosimplefb=1 foobar1= foobar2"
+append="mitigations=0 quiet=99 foo=\"bar  zap\" nosimplefb=1 foobar1= foobar2 cio_ignore=all,!0800-0802,!6000-600b,!fa00"
 <<<<<<<<<<<<<<<<
