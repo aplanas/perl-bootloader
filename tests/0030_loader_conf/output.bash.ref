@@ -1,0 +1,9 @@
+empty=[]
+[✔] lib_loader_conf_set /tmp/loader.conf timeout 3
+[✔] lib_loader_conf_set /tmp/loader.conf default opensuse-1.conf
+[✔] lib_loader_conf_set /tmp/loader.conf timeout menu-force
+timeout menu-force
+default opensuse-1.conf
+timeout=[menu-force]
+default=[opensuse-1.conf]
+missing=[]

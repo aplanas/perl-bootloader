@@ -1,0 +1,16 @@
+export PBL_INCLUDE=/usr/lib/bootloader/include
+. $PBL_INCLUDE/library
+
+conf=/tmp/loader.conf
+
+# missing file
+echo "empty=[$(lib_loader_conf_get $conf timeout)]"
+
+run lib_loader_conf_set $conf timeout 3
+run lib_loader_conf_set $conf default opensuse-1.conf
+run lib_loader_conf_set $conf timeout menu-force
+cat $conf
+
+echo "timeout=[$(lib_loader_conf_get $conf timeout)]"
+echo "default=[$(lib_loader_conf_get $conf default)]"
+echo "missing=[$(lib_loader_conf_get $conf missing)]"

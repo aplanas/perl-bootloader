@@ -39,6 +39,36 @@ lib_set_config ()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_loader_conf_get FILE KEY
+#
+# Print the value of KEY in boot loader config FILE.
+#
+# Nothing is printed if FILE or KEY is missing.
+#
+lib_loader_conf_get ()
+{
+  [ -f "$1" ] || return 0
+
+  sed -n -e "/^$2 / { s/^$2 *// ; p ; q ; }" "$1"
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_loader_conf_set FILE KEY VALUE
+#
+# Set KEY to VALUE in boot loader config FILE, adding KEY or FILE if needed.
+#
+lib_loader_conf_set ()
+{
+  if [ -f "$1" ] && grep -q "^$2 " "$1" ; then
+    sed -i -e "s|^$2 .*|$2 $3|" "$1"
+  else
+    echo "$2 $3" >> "$1"
+  fi
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # lib_get_cmdline_grub
 #
 # Set $cmdline to default grub cmdline.
