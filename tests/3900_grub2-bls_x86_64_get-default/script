@@ -1,0 +1,12 @@
+export TEST_ARCH=x86_64
+run pbl --loader grub2-bls
+
+# no default set
+run pbl --get-default
+
+mkdir -p /boot/efi/EFI/opensuse
+echo "# GRUB Environment Block" > /boot/efi/EFI/opensuse/grubenv
+run pbl --get-default
+
+echo "default=opensuse-tumbleweed-6.9.9-1-default.conf" >> /boot/efi/EFI/opensuse/grubenv
+run pbl --get-default

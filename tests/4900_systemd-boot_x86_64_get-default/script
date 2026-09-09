@@ -1,0 +1,12 @@
+export TEST_ARCH=x86_64
+run pbl --loader systemd-boot
+
+# no default set
+run pbl --get-default
+
+mkdir -p /boot/efi/loader
+echo "timeout 3" > /boot/efi/loader/loader.conf
+run pbl --get-default
+
+echo "default opensuse-tumbleweed-6.9.9-1-default.conf" >> /boot/efi/loader/loader.conf
+run pbl --get-default

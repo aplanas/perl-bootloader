@@ -45,6 +45,9 @@ Note that this only changes a config variable. To actually use the new boot load
 *--default* _ENTRY_::
 Set default boot entry to _ENTRY_.
 
+*--get-default*::
+Print the default boot entry.
+
 *--add-option* _OPTION_::
 Add _OPTION_ to default boot options.
 

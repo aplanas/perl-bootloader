@@ -69,6 +69,39 @@ lib_loader_conf_set ()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_grubenv_get FILE KEY
+#
+# Print the value of KEY in grub environment block FILE.
+#
+# Nothing is printed if FILE or KEY is missing.
+#
+lib_grubenv_get ()
+{
+  [ -f "$1" ] || return 0
+
+  sed -n -e "/^$2=/ { s/^$2=// ; p ; q ; }" "$1"
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_efi_var_get NAME
+#
+# Print the value of boot loader interface EFI variable NAME.
+#
+# Nothing is printed if the variable does not exist.
+#
+lib_efi_var_get ()
+{
+  efi_var="/sys/firmware/efi/efivars/$1-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f"
+
+  [ -r "$efi_var" ] || return 0
+
+  # 4 bytes of attributes, then the value as UTF-16LE
+  dd "if=$efi_var" bs=2 skip=2 status=none | tr -d '\0'
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # lib_get_cmdline_grub
 #
 # Set $cmdline to default grub cmdline.

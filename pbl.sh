@@ -45,6 +45,7 @@ Options:
     --loader BOOTLOADER         Set current boot loader to BOOTLOADER.
                                 Supported values: none, grub2, grub2-bls, grub2-efi, systemd-boot, u-boot.
     --default ENTRY             Set default boot entry to ENTRY.
+    --get-default               Get default boot entry.
     --add-option OPTION         Add OPTION to default boot options.
     --del-option OPTION         Delete OPTION from default boot options.
     --get-option OPTION         Get OPTION from default boot options.
@@ -377,6 +378,7 @@ while true ; do
     --install) shift ; run_script "install" || exit ; continue ;;
     --config) shift ; run_script "config" || exit ; continue ;;
     --default ) check_args 1 "${@}" ; shift ; run_script "default" "$1" || exit ; shift ; continue ;;
+    --get-default) shift ; run_script "get-default" || exit ; continue ;;
     --add-option ) check_args 1 "${@}" ; shift ; run_script "add-option" "$1" || exit ; shift ; continue ;;
     --del-option ) check_args 1 "${@}" ; shift ; run_script "del-option" "$1" || exit ; shift ; continue ;;
     --get-option ) check_args 1 "${@}" ; shift ; run_script "get-option" "$1" || exit ; shift ; continue ;;
