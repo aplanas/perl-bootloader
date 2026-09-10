@@ -1,2 +1,12 @@
 changelog
 VERSION
+
+# what a test run leaves behind, removed by "make clean". The ".ref" files
+# next to them are the expected results, and are tracked
+tests/*/*.bash
+tests/*/*.dash
+tests/*/*.ksh
+tests/*/*.busybox
+tests/testresults*.diff
+tests/root
+tests/real_root
