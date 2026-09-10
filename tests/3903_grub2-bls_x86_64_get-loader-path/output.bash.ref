@@ -1,0 +1,8 @@
+[✔] pbl --loader grub2-bls
+[✔] pbl --get-loader-path
+/boot/efi/EFI/BOOT/BOOTX64.EFI
+[✔] pbl --get-loader-path
+/boot/efi/EFI/opensuse/grubbls.efi
+[✔] pbl --get-loader-path
+/boot/efi/EFI/opensuse/grub.efi
+[✔] pbl --get-loader-path

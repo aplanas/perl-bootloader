@@ -1,0 +1,8 @@
+[✔] pbl --loader systemd-boot
+[✔] pbl --get-loader-path
+/boot/efi/EFI/BOOT/BOOTX64.EFI
+[✔] pbl --get-loader-path
+/boot/efi/EFI/systemd/systemd-bootx64.efi
+[✔] pbl --get-loader-path
+/boot/efi/EFI/systemd/grub.efi
+[✔] pbl --get-loader-path

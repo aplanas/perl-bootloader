@@ -1,0 +1,35 @@
+#! /usr/bin/sh
+
+# Settings from /etc/sysconfig/filename are available as environment vars
+# with the name 'SYS__FILENAME__KEY' (filename converted to upper case).
+#
+# Not all files are parsed, current list is:
+#   bootloader, language
+#
+
+# usage: get-loader-path
+#
+# Read the path of the boot loader binary in the ESP.
+#
+# The path is written into the file passed via the 'PBL_RESULT' environment
+# var. Nothing is written if there is no boot loader in the ESP.
+
+# include common functions
+. "$PBL_INCLUDE/library"
+
+lib_get_efi_mount_dir
+lib_get_efi_distro_dir
+
+efi_dir="$efi_mount_dir/EFI/$efi_distro_dir"
+
+# behind shim the loader is deployed under the name shim starts. The
+# architecture is in the file name, and there is only ever one of them. On
+# removable media everything lives in EFI/BOOT instead
+loader=$(lib_first_existing "$efi_dir/grub.efi" "$efi_dir"/systemd-boot*.efi \
+                            "$efi_mount_dir"/EFI/BOOT/BOOT*.EFI)
+
+if [ -n "$loader" ] ; then
+  echo "$loader" >> "$PBL_RESULT"
+fi
+
+exit 0

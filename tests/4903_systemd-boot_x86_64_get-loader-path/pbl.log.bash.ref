@@ -1,0 +1,21 @@
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2
+2023-11-01 23:59:58 <1> pbl-0: bootloader = systemd-boot
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/systemd-boot/get-loader-path' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: bootloader = systemd-boot
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/systemd-boot/get-loader-path' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+/boot/efi/EFI/BOOT/BOOTX64.EFI
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = systemd-boot
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/systemd-boot/get-loader-path' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+/boot/efi/EFI/systemd/systemd-bootx64.efi
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = systemd-boot
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/systemd-boot/get-loader-path' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+/boot/efi/EFI/systemd/grub.efi
+<<<<<<<<<<<<<<<<

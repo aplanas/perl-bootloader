@@ -59,6 +59,11 @@ installed one is newer, or *current* if they are the same. shim counts as part
 of the answer, as it is installed together with the boot loader. Nothing is
 printed if the two cannot be compared.
 
+*--get-loader-path*::
+Print the path of the boot loader binary on the EFI System Partition: the one
+the firmware starts, or the one shim starts behind it. Nothing is printed if
+there is none.
+
 *--add-option* _OPTION_::
 Add _OPTION_ to default boot options.
 

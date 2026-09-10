@@ -1,0 +1,20 @@
+export TEST_ARCH=x86_64
+run pbl --loader grub2-bls
+
+# nothing installed
+run pbl --get-loader-path
+
+# on removable media everything lives in EFI/BOOT, and the firmware starts
+# the binary named after the architecture
+mkdir -p /boot/efi/EFI/BOOT
+echo "shim" > /boot/efi/EFI/BOOT/BOOTX64.EFI
+run pbl --get-loader-path
+
+mkdir -p /boot/efi/EFI/opensuse
+echo "the boot loader" > /boot/efi/EFI/opensuse/grubbls.efi
+run pbl --get-loader-path
+
+# behind shim the loader is installed as grub.efi, and that is the one shim
+# starts
+echo "the boot loader" > /boot/efi/EFI/opensuse/grub.efi
+run pbl --get-loader-path
