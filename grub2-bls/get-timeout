@@ -1,0 +1,37 @@
+#! /usr/bin/sh
+
+# Settings from /etc/sysconfig/filename are available as environment vars
+# with the name 'SYS__FILENAME__KEY' (filename converted to upper case).
+#
+# Not all files are parsed, current list is:
+#   bootloader, language
+#
+
+# usage: get-timeout
+#
+# Read the boot menu timeout, in seconds.
+#
+# The timeout is written into the file passed via 'PBL_RESULT' environment var.
+# Nothing is returned if no timeout is set, and grub then waits forever.
+
+# include common functions
+. "$PBL_INCLUDE/library"
+
+lib_get_efi_mount_dir
+lib_get_efi_distro_dir
+
+# the EFI variable wins, grubenv is what is left on a system booted without
+# one. loader.conf is never read here: grub2-bls does not look at it
+timeout=$(lib_efi_var_get LoaderConfigTimeout)
+
+if [ -z "$timeout" ] ; then
+  timeout=$(lib_grubenv_get "$efi_mount_dir/EFI/$efi_distro_dir/grubenv" timeout)
+fi
+
+timeout=$(lib_normalize_timeout "$timeout")
+
+if [ -n "$timeout" ] ; then
+  echo "$timeout" >> "$PBL_RESULT"
+fi
+
+exit 0

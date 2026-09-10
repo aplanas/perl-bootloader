@@ -102,6 +102,25 @@ lib_efi_var_get ()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_normalize_timeout VALUE
+#
+# Print VALUE as a number of seconds.
+#
+# A menu that is not shown is 0 and a menu that waits forever is -1, however
+# the boot loader spelled them. Nothing is printed for an empty VALUE.
+#
+lib_normalize_timeout ()
+{
+  case "$1" in
+    menu-disabled | menu-hidden) echo 0 ;;
+    menu-force | 4294967295) echo -1 ;;
+    "") ;;
+    *) echo "$1" ;;
+  esac
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # lib_get_cmdline_grub
 #
 # Set $cmdline to default grub cmdline.

@@ -1,0 +1,22 @@
+export TEST_ARCH=x86_64
+run pbl --loader systemd-boot
+
+# no timeout set
+run pbl --get-timeout
+
+mkdir -p /boot/efi/loader
+echo "default opensuse-tumbleweed-6.9.9-1-default.conf" > /boot/efi/loader/loader.conf
+run pbl --get-timeout
+
+echo "timeout 3" >> /boot/efi/loader/loader.conf
+run pbl --get-timeout
+
+# a menu that is not shown, and one that waits forever
+sed -i -e "s/^timeout .*/timeout menu-hidden/" /boot/efi/loader/loader.conf
+run pbl --get-timeout
+
+sed -i -e "s/^timeout .*/timeout menu-force/" /boot/efi/loader/loader.conf
+run pbl --get-timeout
+
+sed -i -e "s/^timeout .*/timeout 4294967295/" /boot/efi/loader/loader.conf
+run pbl --get-timeout

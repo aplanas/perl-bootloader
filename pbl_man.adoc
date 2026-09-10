@@ -48,6 +48,10 @@ Set default boot entry to _ENTRY_.
 *--get-default*::
 Print the default boot entry.
 
+*--get-timeout*::
+Print the boot menu timeout, in seconds. A menu that is not shown is 0 and a
+menu that waits forever is -1. Nothing is printed if no timeout is set.
+
 *--add-option* _OPTION_::
 Add _OPTION_ to default boot options.
 

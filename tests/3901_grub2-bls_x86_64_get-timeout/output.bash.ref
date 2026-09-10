@@ -1,0 +1,10 @@
+[✔] pbl --loader grub2-bls
+[✔] pbl --get-timeout
+[✔] pbl --get-timeout
+3
+[✔] pbl --get-timeout
+0
+[✔] pbl --get-timeout
+-1
+[✔] pbl --get-timeout
+[✔] pbl --get-timeout
