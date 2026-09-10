@@ -90,8 +90,13 @@ lib_grubenv_get ()
 #
 # Nothing is printed if the variable does not exist.
 #
+# UPDATE_NVRAM="no" means nobody keeps these variables current, so what they
+# hold is stale and the configuration file is the one to believe.
+#
 lib_efi_var_get ()
 {
+  [ "$SYS__BOOTLOADER__UPDATE_NVRAM" != "no" ] || return 0
+
   efi_var="/sys/firmware/efi/efivars/$1-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f"
 
   [ -r "$efi_var" ] || return 0
