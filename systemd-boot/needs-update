@@ -1,0 +1,91 @@
+#! /usr/bin/sh
+
+# Settings from /etc/sysconfig/filename are available as environment vars
+# with the name 'SYS__FILENAME__KEY' (filename converted to upper case).
+#
+# Not all files are parsed, current list is:
+#   bootloader, language
+#
+
+# usage: needs-update
+#
+# Report whether the boot loader deployed in the ESP is the one the system
+# has.
+#
+# One of "update", "current" or "newer" is written into the file passed via
+# the 'PBL_RESULT' environment var. Nothing is written when the question
+# cannot be answered.
+
+# include common functions
+. "$PBL_INCLUDE/library"
+
+# print the first of the arguments that exists
+first_existing ()
+{
+  for f in "$@" ; do
+    if [ -e "$f" ] ; then
+      echo "$f"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+# print the systemd-boot version embedded in the EFI binary $1
+#
+# The binary carries the marker more than once, and the answer has to be a
+# single version, so reading stops at the first one.
+#
+loader_version ()
+{
+  # one printable run per line, so the marker can be matched as a whole line
+  tr -c '[:print:]' '\n' < "$1" |
+    sed -n '/^#### LoaderInfo: systemd-boot .* ####$/{s/.*systemd-boot \(.*\) ####$/\1/p;q;}'
+}
+
+lib_get_efi_mount_dir
+lib_get_efi_distro_dir
+
+efi_dir="$efi_mount_dir/EFI/$efi_distro_dir"
+
+# behind shim the loader is deployed under the name shim starts. The
+# architecture is in the file name, and there is only ever one of them
+deployed=$(first_existing "$efi_dir/grub.efi" "$efi_dir"/systemd-boot*.efi)
+
+# a signed systemd-boot may come from a package of its own
+available=$(first_existing /usr/lib/systemd-boot/systemd-boot*.efi \
+                           /usr/lib/systemd/boot/efi/systemd-boot*.efi)
+
+if [ -z "$deployed" ] || [ -z "$available" ] ; then
+  echo "no systemd-boot to compare"
+  exit 0
+fi
+
+deployed_version=$(loader_version "$deployed")
+available_version=$(loader_version "$available")
+
+if [ -z "$deployed_version" ] || [ -z "$available_version" ] ; then
+  echo "no systemd-boot version in $deployed or $available"
+  exit 0
+fi
+
+loader_status=$(lib_compare_versions "$deployed_version" "$available_version")
+
+# shim and the boot loader are installed together, so a new shim on its own is
+# already a reason to install, and a newer one a reason not to
+shim_status=$(lib_shim_status "$efi_dir")
+
+if [ "$loader_status" = update ] || [ "$shim_status" = update ] ; then
+  result=update
+elif [ "$loader_status" = newer ] || [ "$shim_status" = newer ] ; then
+  result=newer
+else
+  result="$loader_status"
+fi
+
+if [ -n "$result" ] ; then
+  echo "$result" >> "$PBL_RESULT"
+fi
+
+exit 0

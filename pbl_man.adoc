@@ -52,6 +52,13 @@ Print the default boot entry.
 Print the boot menu timeout, in seconds. A menu that is not shown is 0 and a
 menu that waits forever is -1. Nothing is printed if no timeout is set.
 
+*--needs-update*::
+Compare the boot loader installed on the EFI System Partition with the one the
+system has: print *update* if the system has a newer one, *newer* if the
+installed one is newer, or *current* if they are the same. shim counts as part
+of the answer, as it is installed together with the boot loader. Nothing is
+printed if the two cannot be compared.
+
 *--add-option* _OPTION_::
 Add _OPTION_ to default boot options.
 

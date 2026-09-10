@@ -1,0 +1,33 @@
+#! /bin/sh
+
+# just enough 'systemd-analyze' to compare two versions
+#
+# a version is split on '.' and '-' and compared component by component. The
+# exit codes are the documented ones: 0 if the versions are equal, 11 if the
+# first is newer, 12 if the second is
+
+[ "$1" = "compare-versions" ] || exit 1
+
+first=$(echo "$2" | tr '.-' '  ')
+second=$(echo "$3" | tr '.-' '  ')
+
+i=1
+
+while true ; do
+  # the trailing space is what makes 'cut' run out of fields: without a
+  # delimiter it prints the whole line, whatever the field number
+  x=$(echo "$first " | cut -d ' ' -f $i)
+  y=$(echo "$second " | cut -d ' ' -f $i)
+
+  if [ -z "$x" ] && [ -z "$y" ] ; then
+    exit 0
+  fi
+
+  [ -n "$x" ] || x=0
+  [ -n "$y" ] || y=0
+
+  [ "$x" -gt "$y" ] 2>/dev/null && exit 11
+  [ "$x" -lt "$y" ] 2>/dev/null && exit 12
+
+  i=$((i + 1))
+done

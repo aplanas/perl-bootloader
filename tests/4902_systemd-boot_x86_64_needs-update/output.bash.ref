@@ -1,0 +1,19 @@
+[✔] pbl --loader systemd-boot
+[✔] pbl --needs-update
+update
+[✔] pbl --needs-update
+current
+[✔] pbl --needs-update
+newer
+[✔] pbl --needs-update
+current
+[✔] pbl --needs-update
+current
+[✔] pbl --needs-update
+update
+[✔] pbl --needs-update
+newer
+[✔] pbl --needs-update
+current
+[✔] pbl --needs-update
+[✔] pbl --needs-update

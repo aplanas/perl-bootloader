@@ -47,6 +47,8 @@ Options:
     --default ENTRY             Set default boot entry to ENTRY.
     --get-default               Get default boot entry.
     --get-timeout               Get boot menu timeout, in seconds.
+    --needs-update              Compare the installed boot loader with the one the system has.
+                                Prints "update", "current", or "newer".
     --add-option OPTION         Add OPTION to default boot options.
     --del-option OPTION         Delete OPTION from default boot options.
     --get-option OPTION         Get OPTION from default boot options.
@@ -381,6 +383,7 @@ while true ; do
     --default ) check_args 1 "${@}" ; shift ; run_script "default" "$1" || exit ; shift ; continue ;;
     --get-default) shift ; run_script "get-default" || exit ; continue ;;
     --get-timeout) shift ; run_script "get-timeout" || exit ; continue ;;
+    --needs-update) shift ; run_script "needs-update" || exit ; continue ;;
     --add-option ) check_args 1 "${@}" ; shift ; run_script "add-option" "$1" || exit ; shift ; continue ;;
     --del-option ) check_args 1 "${@}" ; shift ; run_script "del-option" "$1" || exit ; shift ; continue ;;
     --get-option ) check_args 1 "${@}" ; shift ; run_script "get-option" "$1" || exit ; shift ; continue ;;

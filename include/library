@@ -126,6 +126,27 @@ lib_normalize_timeout ()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_compare_versions DEPLOYED AVAILABLE
+#
+# Print how the boot loader in the ESP relates to the one the system has:
+# "update" if AVAILABLE is newer, "newer" if DEPLOYED is, "current" if the two
+# are the same.
+#
+# Nothing is printed if they cannot be compared.
+#
+lib_compare_versions ()
+{
+  systemd-analyze compare-versions "$1" "$2" > /dev/null 2>&1
+
+  case $? in
+    0) echo current ;;
+    11) echo newer ;;
+    12) echo update ;;
+  esac
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # lib_get_cmdline_grub
 #
 # Set $cmdline to default grub cmdline.
@@ -374,6 +395,53 @@ lib_get_efi_distro_dir ()
     efi_distro_dir=systemd
   else
     efi_distro_dir=$(. /etc/os-release 2>/dev/null && echo "$NAME $VERSION" | tr "[:upper:]" "[:lower:]" | cut -d ' ' -f 1)
+  fi
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_shim_version FILE
+#
+# Print the version of the shim binary FILE.
+#
+# shim only reports a major.minor that does not change between builds, so the
+# modification time is appended to it. FAT keeps that time to a resolution of
+# two seconds, which is why it stops at the minutes.
+#
+# Nothing is printed if FILE is not a shim.
+#
+lib_shim_version ()
+{
+  [ -e "$1" ] || return 0
+
+  # one printable run per line, so the marker can be matched as a whole line
+  shim_version=$(tr -c '[:print:]' '\n' < "$1" |
+    sed -n '/^\$Version: .* \$$/{s/^\$Version: \(.*\) \$$/\1/p;q;}')
+
+  [ -n "$shim_version" ] || return 0
+
+  echo "$shim_version-$(date -r "$1" +%Y%m%d%H%M)"
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_shim_status EFI_DIR
+#
+# Print how the shim in EFI_DIR relates to the one the system has, in the
+# words of lib_compare_versions.
+#
+# A missing shim on either side prints "current": there is nothing to replace,
+# or nothing to replace it with.
+#
+lib_shim_status ()
+{
+  deployed_shim=$(lib_shim_version "$1/shim.efi")
+  available_shim=$(lib_shim_version "/usr/share/efi/$(uname -m)/shim.efi")
+
+  if [ -z "$deployed_shim" ] || [ -z "$available_shim" ] ; then
+    echo current
+  else
+    lib_compare_versions "$deployed_shim" "$available_shim"
   fi
 }
 

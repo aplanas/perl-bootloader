@@ -1,0 +1,51 @@
+export TEST_ARCH=x86_64
+run pbl --loader systemd-boot
+
+# nothing installed, nothing to compare
+run pbl --needs-update
+
+mkdir -p /boot/efi/EFI/systemd /usr/lib/systemd/boot/efi
+
+# a real boot loader carries the marker more than once
+echo "#### LoaderInfo: systemd-boot 261 ####" > /usr/lib/systemd/boot/efi/systemd-bootx64.efi
+echo "#### LoaderInfo: systemd-boot 261 ####" >> /usr/lib/systemd/boot/efi/systemd-bootx64.efi
+
+echo "#### LoaderInfo: systemd-boot 258.4 ####" > /boot/efi/EFI/systemd/systemd-bootx64.efi
+run pbl --needs-update
+
+echo "#### LoaderInfo: systemd-boot 261 ####" > /boot/efi/EFI/systemd/systemd-bootx64.efi
+run pbl --needs-update
+
+# a downgrade is not an update
+echo "#### LoaderInfo: systemd-boot 262 ####" > /boot/efi/EFI/systemd/systemd-bootx64.efi
+run pbl --needs-update
+
+# behind shim the loader is installed as grub.efi, and that is the one that boots
+echo "#### LoaderInfo: systemd-boot 261 ####" > /boot/efi/EFI/systemd/grub.efi
+run pbl --needs-update
+
+# shim is installed together with the boot loader, so a new shim on its own is
+# already a reason to install. Its version does not change between builds, so
+# the modification time decides, which "date -r" reads from the .mtime file
+mkdir -p /usr/share/efi/x86_64
+
+echo "\$Version: 16.1 \$" > /boot/efi/EFI/systemd/shim.efi
+echo "202506170714" > /boot/efi/EFI/systemd/shim.efi.mtime
+echo "\$Version: 16.1 \$" > /usr/share/efi/x86_64/shim.efi
+echo "202506170714" > /usr/share/efi/x86_64/shim.efi.mtime
+run pbl --needs-update
+
+echo "202601011200" > /usr/share/efi/x86_64/shim.efi.mtime
+run pbl --needs-update
+
+# a shim in the ESP newer than the system one is not an update
+echo "202701011200" > /boot/efi/EFI/systemd/shim.efi.mtime
+run pbl --needs-update
+
+# and neither side having a shim is not one either
+rm /boot/efi/EFI/systemd/shim.efi /boot/efi/EFI/systemd/shim.efi.mtime
+run pbl --needs-update
+
+# a boot loader that does not say which version it is
+echo "not systemd-boot" > /boot/efi/EFI/systemd/grub.efi
+run pbl --needs-update

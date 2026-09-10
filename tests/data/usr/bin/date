@@ -1,5 +1,16 @@
 #! /bin/sh
 
+# 'date -r FILE' has no fixed answer to give, and the test chroot has no way
+# to set a modification time, so the time is read from FILE.mtime
+if [ "$1" = "-r" ] ; then
+  if [ -f "$2.mtime" ] ; then
+    cat "$2.mtime"
+  else
+    echo "200001010000"
+  fi
+  exit 0
+fi
+
 if [ "$1" = "+%F %T" ] ; then
   echo "2023-11-01 23:59:58"
   exit 0
