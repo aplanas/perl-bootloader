@@ -1,0 +1,59 @@
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+>>>>>>>>>>>>>>>>
+no grub2-bls to compare
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+update
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+current
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+newer
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+update
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+newer
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+current
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+current
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+2023-11-01 23:59:58 <1> pbl-0: result:
+>>>>>>>>>>>>>>>>
+update
+<<<<<<<<<<<<<<<<
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls
+2023-11-01 23:59:58 <1> pbl-0: '/usr/lib/bootloader/grub2-bls/needs-update' = 0, output:
+>>>>>>>>>>>>>>>>
+no grub2-bls version in /boot/efi/EFI/opensuse/grub.efi or /usr/share/grub2/x86_64-efi/grubbls.efi
+<<<<<<<<<<<<<<<<

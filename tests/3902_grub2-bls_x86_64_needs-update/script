@@ -1,0 +1,60 @@
+export TEST_ARCH=x86_64
+run pbl --loader grub2-bls
+
+# nothing installed, nothing to compare
+run pbl --needs-update
+
+mkdir -p /boot/efi/EFI/opensuse /usr/share/grub2/x86_64-efi
+
+# the version is a string of its own, the one that fills in the format the
+# banner is printed with
+echo "GNU GRUB  version %s" > /usr/share/grub2/x86_64-efi/grubbls.efi
+echo "2.14" >> /usr/share/grub2/x86_64-efi/grubbls.efi
+echo "202608271024" > /usr/share/grub2/x86_64-efi/grubbls.efi.mtime
+
+# two builds of the same version tell each other apart by the modification
+# time, which "install -p" carries into the ESP and "date -r" reads from the
+# .mtime file
+echo "GNU GRUB  version %s" > /boot/efi/EFI/opensuse/grubbls.efi
+echo "2.12" >> /boot/efi/EFI/opensuse/grubbls.efi
+echo "202608271024" > /boot/efi/EFI/opensuse/grubbls.efi.mtime
+run pbl --needs-update
+
+sed -i -e "s/^2\.12$/2.14/" /boot/efi/EFI/opensuse/grubbls.efi
+run pbl --needs-update
+
+# a downgrade is not an update
+sed -i -e "s/^2\.14$/2.15/" /boot/efi/EFI/opensuse/grubbls.efi
+run pbl --needs-update
+
+# the same version built again
+sed -i -e "s/^2\.15$/2.14/" /boot/efi/EFI/opensuse/grubbls.efi
+echo "202501010000" > /boot/efi/EFI/opensuse/grubbls.efi.mtime
+run pbl --needs-update
+
+echo "202701011200" > /boot/efi/EFI/opensuse/grubbls.efi.mtime
+run pbl --needs-update
+
+# behind shim the loader is installed as grub.efi, and that is the one that
+# boots, so the grubbls.efi left in the ESP does not decide
+echo "GNU GRUB  version %s" > /boot/efi/EFI/opensuse/grub.efi
+echo "2.14" >> /boot/efi/EFI/opensuse/grub.efi
+echo "202608271024" > /boot/efi/EFI/opensuse/grub.efi.mtime
+run pbl --needs-update
+
+# shim is installed together with the boot loader, so a new shim on its own
+# is already a reason to install
+mkdir -p /usr/share/efi/x86_64
+
+echo "\$Version: 16.1 \$" > /boot/efi/EFI/opensuse/shim.efi
+echo "202506170714" > /boot/efi/EFI/opensuse/shim.efi.mtime
+echo "\$Version: 16.1 \$" > /usr/share/efi/x86_64/shim.efi
+echo "202506170714" > /usr/share/efi/x86_64/shim.efi.mtime
+run pbl --needs-update
+
+echo "202601011200" > /usr/share/efi/x86_64/shim.efi.mtime
+run pbl --needs-update
+
+# a boot loader that does not say which version it is
+echo "not grub2" > /boot/efi/EFI/opensuse/grub.efi
+run pbl --needs-update

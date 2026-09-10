@@ -19,19 +19,6 @@
 # include common functions
 . "$PBL_INCLUDE/library"
 
-# print the first of the arguments that exists
-first_existing ()
-{
-  for f in "$@" ; do
-    if [ -e "$f" ] ; then
-      echo "$f"
-      return 0
-    fi
-  done
-
-  return 1
-}
-
 # print the systemd-boot version embedded in the EFI binary $1
 #
 # The binary carries the marker more than once, and the answer has to be a
@@ -51,11 +38,11 @@ efi_dir="$efi_mount_dir/EFI/$efi_distro_dir"
 
 # behind shim the loader is deployed under the name shim starts. The
 # architecture is in the file name, and there is only ever one of them
-deployed=$(first_existing "$efi_dir/grub.efi" "$efi_dir"/systemd-boot*.efi)
+deployed=$(lib_first_existing "$efi_dir/grub.efi" "$efi_dir"/systemd-boot*.efi)
 
 # a signed systemd-boot may come from a package of its own
-available=$(first_existing /usr/lib/systemd-boot/systemd-boot*.efi \
-                           /usr/lib/systemd/boot/efi/systemd-boot*.efi)
+available=$(lib_first_existing /usr/lib/systemd-boot/systemd-boot*.efi \
+                               /usr/lib/systemd/boot/efi/systemd-boot*.efi)
 
 if [ -z "$deployed" ] || [ -z "$available" ] ; then
   echo "no systemd-boot to compare"
@@ -70,19 +57,7 @@ if [ -z "$deployed_version" ] || [ -z "$available_version" ] ; then
   exit 0
 fi
 
-loader_status=$(lib_compare_versions "$deployed_version" "$available_version")
-
-# shim and the boot loader are installed together, so a new shim on its own is
-# already a reason to install, and a newer one a reason not to
-shim_status=$(lib_shim_status "$efi_dir")
-
-if [ "$loader_status" = update ] || [ "$shim_status" = update ] ; then
-  result=update
-elif [ "$loader_status" = newer ] || [ "$shim_status" = newer ] ; then
-  result=newer
-else
-  result="$loader_status"
-fi
+result=$(lib_update_status "$efi_dir" "$deployed_version" "$available_version")
 
 if [ -n "$result" ] ; then
   echo "$result" >> "$PBL_RESULT"

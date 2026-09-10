@@ -447,6 +447,52 @@ lib_shim_status ()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_update_status EFI_DIR DEPLOYED AVAILABLE
+#
+# Print how the boot loader deployed in EFI_DIR relates to the one the system
+# has, in the words of lib_compare_versions. DEPLOYED and AVAILABLE are its
+# versions, as the backend of each loader reads them.
+#
+# shim is part of the answer: it is installed together with the boot loader,
+# so a new shim on its own is already a reason to install, and a newer one a
+# reason not to.
+#
+lib_update_status ()
+{
+  loader_status=$(lib_compare_versions "$2" "$3")
+  shim_status=$(lib_shim_status "$1")
+
+  if [ "$loader_status" = update ] || [ "$shim_status" = update ] ; then
+    echo update
+  elif [ "$loader_status" = newer ] || [ "$shim_status" = newer ] ; then
+    echo newer
+  else
+    echo "$loader_status"
+  fi
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_first_existing FILE...
+#
+# Print the first of the arguments that exists.
+#
+# Nothing is printed if none of them does.
+#
+lib_first_existing ()
+{
+  for tmp_file in "$@" ; do
+    if [ -e "$tmp_file" ] ; then
+      echo "$tmp_file"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # lib_get_efi_boot_order
 #
 # Set $efi_boot_order to the current BootOrder as reported by efibootmgr.
