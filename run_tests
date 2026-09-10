@@ -189,7 +189,9 @@ get_testdata ()
   t="$1"
   root_dir="$2"
 
-  sed -E -e "s/ pbl-[0-9]+: / pbl-0: /" < "$root_dir/var/log/pbl.log" > "$test_dir/$t/pbl.log$suffix"
+  # the pid is not reproducible, and pbl logs under whichever of its names
+  # was called
+  sed -E -e "s/^([^ ]+ [^ ]+ <[0-9]+> )([a-z_-]+)-[0-9]+: /\1\2-0: /" < "$root_dir/var/log/pbl.log" > "$test_dir/$t/pbl.log$suffix"
   cp "$root_dir/etc/sysconfig/bootloader" "$test_dir/$t/bootloader$suffix"
 }
 

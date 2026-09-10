@@ -1,0 +1,17 @@
+export PBL_INCLUDE=/usr/lib/bootloader/include
+. $PBL_INCLUDE/library
+
+# where bootctl says the ESP is mounted
+lib_get_efi_mount_dir
+echo "bootctl=[$efi_mount_dir]"
+
+# a caller that already chose an ESP hands it down
+export SYSTEMD_ESP_PATH=/mnt/esp
+lib_get_efi_mount_dir
+echo "handed down=[$efi_mount_dir]"
+unset SYSTEMD_ESP_PATH
+
+# a system without bootctl keeps the traditional mount point
+rm -f /usr/bin/bootctl
+lib_get_efi_mount_dir
+echo "no bootctl=[$efi_mount_dir]"

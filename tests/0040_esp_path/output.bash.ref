@@ -1,0 +1,3 @@
+bootctl=[/efi]
+handed down=[/mnt/esp]
+no bootctl=[/boot/efi]

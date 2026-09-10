@@ -1,0 +1,7 @@
+#! /usr/bin/sh
+
+# just enough 'bootctl' to answer where the ESP is mounted
+
+[ "$1" = "--print-esp-path" ] || exit 1
+
+echo "${SYSTEMD_ESP_PATH:-/efi}"
