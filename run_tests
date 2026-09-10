@@ -32,6 +32,9 @@ busybox_programs="\
   /usr/bin/sleep\
   /usr/bin/tr\
 "
+real_programs="\
+  /usr/bin/systemd-analyze\
+"
 dummy_programs="\
   /usr/bin/kernel-install\
   /usr/bin/sdbootutil\
@@ -44,7 +47,7 @@ dummy_programs="\
 
 # Notes
 #
-# /usr/bin/bootctl, /usr/bin/date, /usr/bin/df, /usr/sbin/efibootmgr, /usr/sbin/fdisk, /usr/bin/systemd-analyze, and /usr/bin/uname are wrapper scripts
+# /usr/bin/bootctl, /usr/bin/date, /usr/bin/df, /usr/sbin/efibootmgr, /usr/sbin/fdisk, and /usr/bin/uname are wrapper scripts
 #
 # - 'bootctl status' returns a sample status listing; other bootctl calls do nothing
 # - 'date "+%F %T"' returns the fixed date "2023-11-01 23:59:58"
@@ -52,8 +55,10 @@ dummy_programs="\
 # - 'df --local --sync --output=source /foo' returns $TEST_DF_foo
 # - 'efibootmgr' returns sample output.
 # - 'fdisk -l -o 'Device,Type' /dev/sda returns a sample listing; other fdisk calls return an error
-# - 'systemd-analyze compare-versions' compares two dotted version numbers
 # - 'uname -m' returns $TEST_ARCH
+#
+# programs listed in real_programs are copied from the host: what they
+# answer depends only on their arguments, so there is nothing to fake.
 #
 # programs listed in dummy_programs are replaced by wrapper scripts that
 # return 0 or (if set) the value of the environment variable $TEST_<NAME>_EXIT
@@ -110,6 +115,10 @@ init_tests ()
 
   for p in $busybox_programs ; do
     mv "$test_root/$p" "$test_root/usr/bin/system"
+  done
+
+  for p in $real_programs ; do
+    cp --parents "$p" $(ldd "$p" | sed -e '/\//! d; s/^.*[ \t]\(\/[^ ]\+\) .*$/\1/') "$test_root"
   done
 
   for p in $dummy_programs ; do
