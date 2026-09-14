@@ -9,3 +9,5 @@
 [✔] pbl --get-timeout
 -1
 [✔] pbl --get-timeout
+-1
+[✔] pbl --no-nvram --get-timeout

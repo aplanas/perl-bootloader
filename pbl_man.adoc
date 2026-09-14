@@ -42,6 +42,11 @@ Set current boot loader to _BOOTLOADER_. +
 Supported values: none, grub2, grub2-bls, grub2-efi, systemd-boot, u-boot. +
 Note that this only changes a config variable. To actually use the new boot loader, run *update-bootloader --install* and *update-bootloader --config*.
 
+*--no-nvram*::
+Do not use the EFI variables: read the configuration files instead, as with
+_UPDATE_NVRAM="no"_ in _/etc/sysconfig/bootloader_. Give it before the
+operation it applies to.
+
 *--default* _ENTRY_::
 Set default boot entry to _ENTRY_.
 

@@ -44,6 +44,7 @@ Options:
     --show                      Print current boot loader.
     --loader BOOTLOADER         Set current boot loader to BOOTLOADER.
                                 Supported values: none, grub2, grub2-bls, grub2-efi, systemd-boot, u-boot.
+    --no-nvram                  Do not use the EFI variables, only the configuration files.
     --default ENTRY             Set default boot entry to ENTRY.
     --get-default               Get default boot entry.
     --get-timeout               Get boot menu timeout, in seconds.
@@ -364,6 +365,9 @@ while true ; do
   case $1 in
     --show ) echo "$loader" ; exit 0 ;;
     --loader ) check_args 1 "${@}" ; shift ; set_loader "$1" || exit ; shift ; continue ;;
+    --no-nvram) shift
+      SYS__BOOTLOADER__UPDATE_NVRAM=no ; export SYS__BOOTLOADER__UPDATE_NVRAM
+      continue ;;
     --log) check_args 1 "${@}" ; shift ; set_log "$1" ; shift ; continue ;;
     --version) echo "$VERSION" ; exit 0 ;;
     --help) bl_usage 0 ;;

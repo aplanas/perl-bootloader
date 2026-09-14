@@ -20,3 +20,7 @@ run pbl --get-timeout
 
 sed -i -e "s/^timeout .*/timeout 4294967295/" /boot/efi/loader/loader.conf
 run pbl --get-timeout
+
+# the EFI variables come first when there are any, and --no-nvram is
+# what leaves them out
+run pbl --no-nvram --get-timeout
