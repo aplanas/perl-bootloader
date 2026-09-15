@@ -1,0 +1,22 @@
+# LOADER_TYPE is empty here, so every run answers from what is installed
+
+# nothing installed, nothing detected, and nothing done
+run pbl --show
+run pbl --config
+
+# EFI/systemd is systemd-boot's alone, and behind shim the loader is deployed
+# under the name shim starts
+mkdir -p /boot/efi/EFI/systemd
+echo "the boot loader" > /boot/efi/EFI/systemd/grub.efi
+run pbl --show
+
+rm -r /boot/efi/EFI/systemd
+
+# the same name in the distro directory is a GRUB2, and without a grub.cfg it
+# is the one that reads the BLS entries
+mkdir -p /boot/efi/EFI/opensuse
+echo "the boot loader" > /boot/efi/EFI/opensuse/grub.efi
+run pbl --show
+
+echo "the config" > /boot/grub2/grub.cfg
+run pbl --show

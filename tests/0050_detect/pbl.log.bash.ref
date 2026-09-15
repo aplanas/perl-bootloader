@@ -1,0 +1,5 @@
+2023-11-01 23:59:58 <1> pbl-0: bootloader =  (detected)
+2023-11-01 23:59:58 <1> pbl-0: bootloader =  (detected)
+2023-11-01 23:59:58 <1> pbl-0: bootloader = systemd-boot (detected)
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-bls (detected)
+2023-11-01 23:59:58 <1> pbl-0: bootloader = grub2-efi (detected)

@@ -3,9 +3,10 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # This is a (wrapper) script to update the bootloader config.
 #
-# It checks /etc/sysconfig/bootloader for the bootloader type.
+# It checks /etc/sysconfig/bootloader for the bootloader type. If that says
+# nothing, it looks at which boot loader is installed in the ESP.
 #
-# If there's no bootloader configured, it does nothing.
+# If there's no bootloader configured and none installed, it does nothing.
 #
 # If the directory /usr/lib/bootloader/$LOADER exists, runs the scripts from
 # that directory.
@@ -317,7 +318,15 @@ lang="$SYS__LANGUAGE__RC_LANG"
 
 set_log "$logfile"
 
-log_msg 1 "bootloader = $loader"
+# LOADER_TYPE is written by the tool that installed the boot loader, and not
+# every one of them does. Look at what is deployed before doing nothing;
+# "none" is a decision and stays one
+if [ -z "$loader" ] ; then
+  loader=$(lib_detect_loader)
+  detected=" (detected)"
+fi
+
+log_msg 1 "bootloader = $loader$detected"
 
 if [ -n "$lang" ] ; then
   log_msg 1 "locale = $lang"

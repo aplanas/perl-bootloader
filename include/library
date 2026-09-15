@@ -400,6 +400,44 @@ lib_get_efi_distro_dir ()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# lib_detect_loader
+#
+# Print the boot loader that is installed in the ESP.
+#
+# Only what is deployed is reported, never a default: a machine with no boot
+# loader installed gets no answer, the same answer LOADER_TYPE gives when it is
+# unset, and that is what keeps --install from picking one on its own.
+#
+lib_detect_loader ()
+{
+  lib_get_efi_mount_dir
+
+  # EFI/systemd is systemd-boot's alone. Behind shim the loader is deployed
+  # under the name shim starts, grub.efi
+  if lib_first_existing "$efi_mount_dir"/EFI/systemd/systemd-boot*.efi \
+                        "$efi_mount_dir/EFI/systemd/grub.efi" > /dev/null ; then
+    echo systemd-boot
+    return 0
+  fi
+
+  # both GRUB2 flavours install into the distro directory, under the same
+  # names, so the binary does not tell them apart. The configuration does:
+  # grub2-efi is installed with a grub.cfg, grub2-bls reads the BLS entries
+  lib_get_efi_distro_dir
+
+  if lib_first_existing "$efi_mount_dir/EFI/$efi_distro_dir"/grub*.efi > /dev/null ; then
+    if [ -e /boot/grub2/grub.cfg ] ; then
+      echo grub2-efi
+    else
+      echo grub2-bls
+    fi
+  fi
+
+  return 0
+}
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # lib_shim_version FILE
 #
 # Print the version of the shim binary FILE.

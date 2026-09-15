@@ -25,6 +25,10 @@ Most notably, not all options make sense for all boot loaders.
 Supported boot loaders have a sub directory in _/usr/lib/bootloader_ containing a shell script for each option.
 To add support for a new boot loader create a new directoy with its name and add scripts for options you need.
 
+The boot loader to act on is _LOADER_TYPE_ in _/etc/sysconfig/bootloader_. If
+that is empty, the boot loader installed in the ESP is used instead; if none is
+installed, nothing is done. _LOADER_TYPE="none"_ also does nothing.
+
 == Options
 
 *--install*::

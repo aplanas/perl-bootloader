@@ -1,0 +1,9 @@
+
+[✔] pbl --show
+[✔] pbl --config
+systemd-boot
+[✔] pbl --show
+grub2-bls
+[✔] pbl --show
+grub2-efi
+[✔] pbl --show
